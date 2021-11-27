@@ -1,5 +1,5 @@
 /**
- * @file  maincode.h
+ * @file  app_display.h
  * @date  25-November-2021
  * @brief Main application function.
  *
@@ -18,5 +18,7 @@
  */
 
 void start_rtos(void);
+void displayTask(void *arg);
+void i2cTask(void *arg);
 
 #endif /* INC_APP_DISPLAY_H_ */

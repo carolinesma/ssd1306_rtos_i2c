@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdint.h>
+#include "ssd1306.h"
 #include "app_display.h"
 
 /* USER CODE END Includes */
