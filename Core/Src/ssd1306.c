@@ -206,7 +206,7 @@ void ssd1306_UpdateScreen(void) {
 }
 
 // Write the screenbuffer with changed to the screen
-void ssd1306_UpdateScreen_2(uint8_t size) {
+void ssd1306_UpdateScreen_2(void) {
     // Write data to each page of RAM. Number of pages
     // depends on the screen height:
     //
@@ -217,7 +217,7 @@ void ssd1306_UpdateScreen_2(uint8_t size) {
         ssd1306_WriteCommand(0xB0 + i); // Set the current RAM page address.
         ssd1306_WriteCommand(0x00);
         ssd1306_WriteCommand(0x10);
-        ssd1306_WriteData(&SSD1306_Buffer[size*i],size);
+        ssd1306_WriteData(&SSD1306_Buffer[SSD1306_WIDTH*i/2],SSD1306_WIDTH/2);
     }
 }
 

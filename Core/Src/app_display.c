@@ -106,7 +106,7 @@ void displayTask(void *arg)
 			ssd1306_SetCursor(20, 34);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
+			ssd1306_UpdateScreen_2(); /* Copia as informações do Buffer para a tela */
 			vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
 			ssd1306_Fill(Black);
 
@@ -126,7 +126,7 @@ void displayTask(void *arg)
 			ssd1306_SetCursor(20, 34);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
+			ssd1306_UpdateScreen_2(); /* Copia as informações do Buffer para a tela */
 			vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
 			ssd1306_Fill(Black); /* Limpa o display */
 
@@ -146,7 +146,7 @@ void displayTask(void *arg)
 			ssd1306_SetCursor(0, 32);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
+			ssd1306_UpdateScreen_2(); /* Copia as informações do Buffer para a tela */
 			vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
 			ssd1306_Fill(Black); /* Limpa o display */
 		}
