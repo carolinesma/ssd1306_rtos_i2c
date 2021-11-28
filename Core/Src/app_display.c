@@ -46,7 +46,9 @@ typedef  struct
 
 Velocidade_Eixo v_eixo;
 GPS gps;
-Velocidade_Base v_base;
+Velocidade_Base v_base_1;
+Velocidade_Base v_base_2;
+Velocidade_Base v_base_3;
 
 /* Variável auxiliar para a conversão dos dados em string */
 char str[32];
@@ -61,9 +63,9 @@ void start_rtos(void)
 	gps.x = -20.004;
 	gps.y = 21.544;
 	gps.angulo_teta = 22.000;
-	v_base.vx = 10;
-	v_base.vy = 10;
-	v_base.w = 10;
+	v_base_1.vx = 10;
+	v_base_1.vy = 10;
+	v_base_1.w = 10;
 
 
 
@@ -92,22 +94,16 @@ void displayTask(void *arg)
 			ssd1306_SetCursor(4, 2);
 			ssd1306_WriteString("Velocidade dos eixos", Font_6x8, White);
 
-			sprintf(str, "%f", (float)v_eixo.w1);
+			sprintf(str, "W1= %3.1f rpm", (float)v_eixo.w1);
 			ssd1306_SetCursor(20, 14);
-			ssd1306_WriteString("W1=", Font_6x8, White);
-			ssd1306_SetCursor(44, 14);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			sprintf(str, "%f", (float)v_eixo.w2);
+			sprintf(str, "W2= %3.1f rpm", (float)v_eixo.w2);
 			ssd1306_SetCursor(20, 24);
-			ssd1306_WriteString("W2=", Font_6x8, White);
-			ssd1306_SetCursor(44, 24);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			sprintf(str, "%f", (float)v_eixo.w3);
+			sprintf(str, "W3= %3.1f rpm", (float)v_eixo.w3);
 			ssd1306_SetCursor(20, 34);
-			ssd1306_WriteString("W3=", Font_6x8, White);
-			ssd1306_SetCursor(44, 34);
 			ssd1306_WriteString(str, Font_6x8, White);
 
 			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
@@ -118,22 +114,16 @@ void displayTask(void *arg)
 			ssd1306_SetCursor(4, 2);
 			ssd1306_WriteString("GPS", Font_6x8, White);
 
-			sprintf(str, "%f", (float)gps.x);
+			sprintf(str, "X= %3.2fm", (float)gps.x);
 			ssd1306_SetCursor(20, 14);
-			ssd1306_WriteString("X=", Font_6x8, White);
-			ssd1306_SetCursor(38, 14);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			sprintf(str, "%f", (float)gps.y);
+			sprintf(str, "Y= %3.2fm", (float)gps.y);
 			ssd1306_SetCursor(20, 24);
-			ssd1306_WriteString("Y=", Font_6x8, White);
-			ssd1306_SetCursor(38, 24);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			sprintf(str, "%f", (float)gps.angulo_teta);
+			sprintf(str, "t= %3.2fº", (float)gps.angulo_teta);
 			ssd1306_SetCursor(20, 34);
-			ssd1306_WriteString("t=", Font_6x8, White);
-			ssd1306_SetCursor(38, 34);
 			ssd1306_WriteString(str, Font_6x8, White);
 
 			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
@@ -144,22 +134,16 @@ void displayTask(void *arg)
 			ssd1306_SetCursor(4, 2);
 			ssd1306_WriteString("Velocidade da Base", Font_6x8, White);
 
-			sprintf(str, "%f", (float)v_base.vx);
-			ssd1306_SetCursor(20, 14);
-			ssd1306_WriteString("Vx=", Font_6x8, White);
-			ssd1306_SetCursor(44, 14);
+			sprintf(str, "%3.3f %3.3f %3.3f", (float)v_base_1.vx, (float)v_base_2.vx, (float)v_base_3.vx);
+			ssd1306_SetCursor(0, 12);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			sprintf(str, "%f", (float)v_base.vy);
-			ssd1306_SetCursor(20, 24);
-			ssd1306_WriteString("Vy=", Font_6x8, White);
-			ssd1306_SetCursor(44, 24);
+			sprintf(str, "%3.3f %3.3f %3.3f", (float)v_base_1.vy, (float)v_base_2.vy, (float)v_base_3.vy);
+			ssd1306_SetCursor(0, 22);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			sprintf(str, "%f", (float)v_base.w);
-			ssd1306_SetCursor(20, 34);
-			ssd1306_WriteString("W=", Font_6x8, White);
-			ssd1306_SetCursor(38, 34);
+			sprintf(str, "%3.2f %3.2f %3.2f", (float)v_base_1.w, (float)v_base_2.w, (float)v_base_3.w);
+			ssd1306_SetCursor(0, 32);
 			ssd1306_WriteString(str, Font_6x8, White);
 
 			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
