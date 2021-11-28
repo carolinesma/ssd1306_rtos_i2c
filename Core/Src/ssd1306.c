@@ -9,6 +9,14 @@ void ssd1306_Reset(void) {
     /* for I2C - do nothing */
 }
 
+// Connection Test
+HAL_StatusTypeDef ssd1306_IICTest(void){
+	uint8_t byte = 0;
+	HAL_StatusTypeDef IIC_status;
+	IIC_status = HAL_I2C_Mem_Read(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &byte, 1, 1);
+	return IIC_status;
+}
+
 // Send a byte to the command register
 void ssd1306_WriteCommand(uint8_t byte) {
     HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &byte, 1, HAL_MAX_DELAY);
