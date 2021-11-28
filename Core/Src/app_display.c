@@ -86,80 +86,80 @@ void displayTask(void *arg)
 	{
 		/* Procedimento para imprimir os dados */
 		/* Velocidade Angular */
-		ssd1306_SetCursor(8, 4);
+		ssd1306_SetCursor(4, 2);
 		ssd1306_WriteString("Velocidade dos eixos", Font_6x8, White);
 
 		sprintf(str, "%f", (float)v_eixo.w1);
 		ssd1306_SetCursor(20, 14);
-		ssd1306_WriteString("W1 =", Font_6x8, White);
-		ssd1306_SetCursor(26, 14);
+		ssd1306_WriteString("W1=", Font_6x8, White);
+		ssd1306_SetCursor(44, 14);
 		ssd1306_WriteString(str, Font_6x8, White);
 
 		sprintf(str, "%f", (float)v_eixo.w2);
 		ssd1306_SetCursor(20, 24);
-		ssd1306_WriteString("W2 =", Font_6x8, White);
-		ssd1306_SetCursor(26, 24);
+		ssd1306_WriteString("W2=", Font_6x8, White);
+		ssd1306_SetCursor(44, 24);
 		ssd1306_WriteString(str, Font_6x8, White);
 
 		sprintf(str, "%f", (float)v_eixo.w3);
 		ssd1306_SetCursor(20, 34);
-		ssd1306_WriteString("W3 =", Font_6x8, White);
-		ssd1306_SetCursor(26, 34);
+		ssd1306_WriteString("W3=", Font_6x8, White);
+		ssd1306_SetCursor(44, 34);
 		ssd1306_WriteString(str, Font_6x8, White);
 
-		ssd1306_UpdateScreen(); /* Copia as infromações do Buffer para a tela */
+		ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
 		vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
 		ssd1306_Fill(Black);
 
 		/* GPS */
-		ssd1306_SetCursor(8, 4);
+		ssd1306_SetCursor(4, 2);
 		ssd1306_WriteString("GPS", Font_6x8, White);
 
 		sprintf(str, "%f", (float)gps.x);
 		ssd1306_SetCursor(20, 14);
-		ssd1306_WriteString("X =", Font_6x8, White);
-		ssd1306_SetCursor(26, 14);
+		ssd1306_WriteString("X=", Font_6x8, White);
+		ssd1306_SetCursor(38, 14);
 		ssd1306_WriteString(str, Font_6x8, White);
 
 		sprintf(str, "%f", (float)gps.y);
 		ssd1306_SetCursor(20, 24);
-		ssd1306_WriteString("Y =", Font_6x8, White);
-		ssd1306_SetCursor(26, 24);
+		ssd1306_WriteString("Y=", Font_6x8, White);
+		ssd1306_SetCursor(38, 24);
 		ssd1306_WriteString(str, Font_6x8, White);
 
 		sprintf(str, "%f", (float)gps.angulo_teta);
 		ssd1306_SetCursor(20, 34);
-		ssd1306_WriteString("t =", Font_6x8, White);
-		ssd1306_SetCursor(26, 34);
+		ssd1306_WriteString("t=", Font_6x8, White);
+		ssd1306_SetCursor(38, 34);
 		ssd1306_WriteString(str, Font_6x8, White);
 
-		ssd1306_UpdateScreen(); /* Copia as infromações do Buffer para a tela */
+		ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
 		vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
 		ssd1306_Fill(Black); /* Limpa o display */
 
 		/* Velocidade escalar */
-		ssd1306_SetCursor(8, 4);
+		ssd1306_SetCursor(4, 2);
 		ssd1306_WriteString("Velocidade da Base", Font_6x8, White);
 
 		sprintf(str, "%f", (float)v_base.vx);
 		ssd1306_SetCursor(20, 14);
-		ssd1306_WriteString("Vx =", Font_6x8, White);
-		ssd1306_SetCursor(26, 14);
+		ssd1306_WriteString("Vx=", Font_6x8, White);
+		ssd1306_SetCursor(44, 14);
 		ssd1306_WriteString(str, Font_6x8, White);
 
 		sprintf(str, "%f", (float)v_base.vy);
 		ssd1306_SetCursor(20, 24);
-		ssd1306_WriteString("Vy =", Font_6x8, White);
-		ssd1306_SetCursor(26, 24);
+		ssd1306_WriteString("Vy=", Font_6x8, White);
+		ssd1306_SetCursor(44, 24);
 		ssd1306_WriteString(str, Font_6x8, White);
 
 		sprintf(str, "%f", (float)v_base.w);
 		ssd1306_SetCursor(20, 34);
-		ssd1306_WriteString("W =", Font_6x8, White);
-		ssd1306_SetCursor(26, 34);
+		ssd1306_WriteString("W=", Font_6x8, White);
+		ssd1306_SetCursor(38, 34);
 		ssd1306_WriteString(str, Font_6x8, White);
 
-		ssd1306_UpdateScreen(); /* Copia as infromações do Buffer para a tela */
+		ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
 		vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
 		ssd1306_Fill(Black); /* Limpa o display */
 
