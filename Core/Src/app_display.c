@@ -91,47 +91,47 @@ void displayTask(void *arg)
 
 			/* Procedimento para imprimir os dados */
 			/* Velocidade Angular */
-			ssd1306_SetCursor(4, 2);
+			ssd1306_SetCursor(1, 2);
 			ssd1306_WriteString("Velocidade dos eixos", Font_6x8, White);
 
 			sprintf(str, "W1= %3.1f rpm", (float)v_eixo.w1);
-			ssd1306_SetCursor(20, 14);
+			ssd1306_SetCursor(1, 14);
 			ssd1306_WriteString(str, Font_6x8, White);
 
 			sprintf(str, "W2= %3.1f rpm", (float)v_eixo.w2);
-			ssd1306_SetCursor(20, 24);
+			ssd1306_SetCursor(1, 24);
 			ssd1306_WriteString(str, Font_6x8, White);
 
 			sprintf(str, "W3= %3.1f rpm", (float)v_eixo.w3);
-			ssd1306_SetCursor(20, 34);
+			ssd1306_SetCursor(1, 34);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			ssd1306_UpdateScreen_2(); /* Copia as informações do Buffer para a tela */
+			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
 			vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
 			ssd1306_Fill(Black);
 
 			/* GPS */
-			ssd1306_SetCursor(4, 2);
+			ssd1306_SetCursor(1, 2);
 			ssd1306_WriteString("GPS", Font_6x8, White);
 
 			sprintf(str, "X= %3.2fm", (float)gps.x);
-			ssd1306_SetCursor(20, 14);
+			ssd1306_SetCursor(1, 14);
 			ssd1306_WriteString(str, Font_6x8, White);
 
 			sprintf(str, "Y= %3.2fm", (float)gps.y);
-			ssd1306_SetCursor(20, 24);
+			ssd1306_SetCursor(1, 24);
 			ssd1306_WriteString(str, Font_6x8, White);
 
 			sprintf(str, "t= %3.2fº", (float)gps.angulo_teta);
-			ssd1306_SetCursor(20, 34);
+			ssd1306_SetCursor(1, 34);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			ssd1306_UpdateScreen_2(); /* Copia as informações do Buffer para a tela */
+			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
 			vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
 			ssd1306_Fill(Black); /* Limpa o display */
 
 			/* Velocidade escalar */
-			ssd1306_SetCursor(4, 2);
+			ssd1306_SetCursor(1, 2);
 			ssd1306_WriteString("Velocidade da Base", Font_6x8, White);
 
 			sprintf(str, "%3.3f %3.3f %3.3f", (float)v_base_1.vx, (float)v_base_2.vx, (float)v_base_3.vx);
@@ -146,11 +146,16 @@ void displayTask(void *arg)
 			ssd1306_SetCursor(0, 32);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			ssd1306_UpdateScreen_2(); /* Copia as informações do Buffer para a tela */
+			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
 			vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
 			ssd1306_Fill(Black); /* Limpa o display */
 		}
-		else ssd1306_Init();
-
+		else
+		{
+			if(ssd1306_IICTest() == HAL_OK)
+				ssd1306_Init();
+			else
+				vTaskDelay(500);
+		}
 	}
 }
