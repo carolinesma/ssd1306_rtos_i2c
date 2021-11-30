@@ -12,6 +12,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "app_display.h"
+#include "filas_rtos.h"
 
 /* Incluir as bibliotecas do Display */
 #include "ssd1306.h"
@@ -20,33 +21,13 @@
 TaskHandle_t hdisplayTask;
 //TaskHandle_t hi2cTask;
 
-/* Declaração dos valores a serem mostrados no display.
+/* Valores a serem mostrados no display.
  * Velocidade dos eixos dos 3 motores, dados do GPS, velocidade da base do robô.
  */
-typedef  struct
-{
-	uint32_t w1;
-	uint32_t w2;
-	uint32_t w3;
-} Velocidade_Eixo;
 
-typedef  struct
-{
-	int32_t x;
-	int32_t y;
-	int32_t angulo_teta;
-} GPS;
-
-typedef  struct
-{
-	uint32_t vx;
-	uint32_t vy;
-	uint32_t w;
-} Velocidade_Base;
-
-Velocidade_Eixo v_eixo;
+vEixo v_eixo;
 GPS gps;
-Velocidade_Base v_base_1;
+vBase v_base;
 
 /* Variável auxiliar para a conversão dos dados em string */
 char str[32];
@@ -54,20 +35,19 @@ char str[32];
 
 void start_rtos(void)
 {
-	/* Valores para Teste */
+	/* Valores para Teste
 	v_eixo.w1 = 1;
 	v_eixo.w2 = 2;
 	v_eixo.w3 = 3;
 	gps.x = -20.004;
 	gps.y = 21.544;
 	gps.angulo_teta = 22.000;
-	v_base_1.vx = 10;
-	v_base_1.vy = 10;
-	v_base_1.w = 10;
-
+	v_base.vx = 10;
+	v_base.vy = 10;
+	v_base.w = 10;**/
 
 	/* Cria a tarefa que irá imprimir os valores em tela */
-	xTaskCreate(displayTask, "displayTask", 128,   NULL,  1,  &hdisplayTask);
+	xTaskCreate(displayTask, "displayTask", 128,   NULL,  2,  &hdisplayTask);
 
 	/* Inicia o gerenciado de tarefas */
 	vTaskStartScheduler();
@@ -75,84 +55,100 @@ void start_rtos(void)
 	while(1); /* Execution will never reach this line */
 }
 
-
 void displayTask(void *arg)
 {
+	uint8_t status;
 	/* Inicializa o display */
 	ssd1306_Init();
+	status = 0;
 
 	while(1)
 	{
-		/* Testa a conexão do display */
-		if(ssd1306_IICTest() == HAL_OK){
-
-			/* Procedimento para imprimir os dados */
-			/* Velocidade Angular */
-			ssd1306_SetCursor(1, 2);
-			ssd1306_WriteString("Velocidade dos eixos", Font_6x8, White);
-
-			sprintf(str, "W1= %3.1f rpm", (float)v_eixo.w1);
-			ssd1306_SetCursor(1, 14);
-			ssd1306_WriteString(str, Font_6x8, White);
-
-			sprintf(str, "W2= %3.1f rpm", (float)v_eixo.w2);
-			ssd1306_SetCursor(1, 24);
-			ssd1306_WriteString(str, Font_6x8, White);
-
-			sprintf(str, "W3= %3.1f rpm", (float)v_eixo.w3);
-			ssd1306_SetCursor(1, 34);
-			ssd1306_WriteString(str, Font_6x8, White);
-
-			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
-			vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
-			ssd1306_Fill(Black);
-
-			/* GPS */
-			ssd1306_SetCursor(1, 2);
-			ssd1306_WriteString("GPS", Font_6x8, White);
-
-			sprintf(str, "X= %3.2fm", (float)gps.x);
-			ssd1306_SetCursor(1, 14);
-			ssd1306_WriteString(str, Font_6x8, White);
-
-			sprintf(str, "Y= %3.2fm", (float)gps.y);
-			ssd1306_SetCursor(1, 24);
-			ssd1306_WriteString(str, Font_6x8, White);
-
-			sprintf(str, "t= %3.2fº", (float)gps.angulo_teta);
-			ssd1306_SetCursor(1, 34);
-			ssd1306_WriteString(str, Font_6x8, White);
-
-			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
-			vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
-			ssd1306_Fill(Black); /* Limpa o display */
-
-			/* Velocidade escalar */
-			ssd1306_SetCursor(1, 2);
-			ssd1306_WriteString("Velocidade da Base", Font_6x8, White);
-
-			sprintf(str, "Vx= %3.3f", (float)v_base_1.vx);
-			ssd1306_SetCursor(0, 12);
-			ssd1306_WriteString(str, Font_6x8, White);
-
-			sprintf(str, "Vy= %3.3f", (float)v_base_1.vy);
-			ssd1306_SetCursor(0, 22);
-			ssd1306_WriteString(str, Font_6x8, White);
-
-			sprintf(str, "W= %3.2f", (float)v_base_1.w);
-			ssd1306_SetCursor(0, 32);
-			ssd1306_WriteString(str, Font_6x8, White);
-
-			ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
-			vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
-			ssd1306_Fill(Black); /* Limpa o display */
-		}
-		else
+		switch (status)
 		{
-			if(ssd1306_IICTest() == HAL_OK)
-				ssd1306_Init();
-			else
-				vTaskDelay(500);
+			case 0:
+				/* Testa a conexão do display */
+				if(ssd1306_IICTest() == HAL_OK){
+
+					/* Velocidade Eixos */
+					/* Leitura dos dados da fila */
+					rDadosVEixo (v_eixo);
+
+					/* Procedimento para imprimir os dados */
+					ssd1306_SetCursor(1, 2);
+					ssd1306_WriteString("Velocidade dos eixos", Font_6x8, White);
+
+					sprintf(str, "W1= %3.1f rpm", (float)v_eixo.w1);
+					ssd1306_SetCursor(1, 14);
+					ssd1306_WriteString(str, Font_6x8, White);
+
+					sprintf(str, "W2= %3.1f rpm", (float)v_eixo.w2);
+					ssd1306_SetCursor(1, 24);
+					ssd1306_WriteString(str, Font_6x8, White);
+
+					sprintf(str, "W3= %3.1f rpm", (float)v_eixo.w3);
+					ssd1306_SetCursor(1, 34);
+					ssd1306_WriteString(str, Font_6x8, White);
+
+					ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
+					vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
+					ssd1306_Fill(Black);
+
+					/* GPS */
+					/* Leitura dos dados da fila */
+					rDadosGps (gps);
+
+					ssd1306_SetCursor(1, 2);
+					ssd1306_WriteString("GPS", Font_6x8, White);
+
+					sprintf(str, "X= %3.2fm", (float)gps.x);
+					ssd1306_SetCursor(1, 14);
+					ssd1306_WriteString(str, Font_6x8, White);
+
+					sprintf(str, "Y= %3.2fm", (float)gps.y);
+					ssd1306_SetCursor(1, 24);
+					ssd1306_WriteString(str, Font_6x8, White);
+
+					sprintf(str, "t= %3.2fº", (float)gps.angulo_teta);
+					ssd1306_SetCursor(1, 34);
+					ssd1306_WriteString(str, Font_6x8, White);
+
+					ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
+					vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
+					ssd1306_Fill(Black); /* Limpa o display */
+
+					/* Velocidade escalar */
+					/* Leitura dos dados da fila */
+					rDadosVBase (v_base);
+
+					ssd1306_SetCursor(1, 2);
+					ssd1306_WriteString("Velocidade da Base", Font_6x8, White);
+
+					sprintf(str, "Vx= %3.3fm/s", (float)v_base.vx);
+					ssd1306_SetCursor(0, 12);
+					ssd1306_WriteString(str, Font_6x8, White);
+
+					sprintf(str, "Vy= %3.3fm/s", (float)v_base.vy);
+					ssd1306_SetCursor(0, 22);
+					ssd1306_WriteString(str, Font_6x8, White);
+
+					sprintf(str, "W= %3.2frpm", (float)v_base.w);
+					ssd1306_SetCursor(0, 32);
+					ssd1306_WriteString(str, Font_6x8, White);
+
+					ssd1306_UpdateScreen(); /* Copia as informações do Buffer para a tela */
+					vTaskDelay(pdMS_TO_TICKS(3000)); /* 3s */
+					ssd1306_Fill(Black); /* Limpa o display */
+				}
+				else status = 1;
+			break;
+			case 1:
+				if(ssd1306_IICTest() == HAL_OK){
+					ssd1306_Init();
+					status = 0;
+				} else vTaskDelay(500);
+			break;
 		}
+
 	}
 }

@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include "ssd1306.h"
 #include "app_display.h"
+#include "filas_rtos.h"
 
 /* USER CODE END Includes */
 
@@ -104,6 +105,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* Inicializa a função rtos em app_display   */
+  criar_filas();
   start_rtos();
 
   /* USER CODE END 2 */
