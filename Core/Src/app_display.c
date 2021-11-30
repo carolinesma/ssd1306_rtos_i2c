@@ -47,8 +47,6 @@ typedef  struct
 Velocidade_Eixo v_eixo;
 GPS gps;
 Velocidade_Base v_base_1;
-Velocidade_Base v_base_2;
-Velocidade_Base v_base_3;
 
 /* Variável auxiliar para a conversão dos dados em string */
 char str[32];
@@ -66,7 +64,6 @@ void start_rtos(void)
 	v_base_1.vx = 10;
 	v_base_1.vy = 10;
 	v_base_1.w = 10;
-
 
 
 	/* Cria a tarefa que irá imprimir os valores em tela */
@@ -134,15 +131,15 @@ void displayTask(void *arg)
 			ssd1306_SetCursor(1, 2);
 			ssd1306_WriteString("Velocidade da Base", Font_6x8, White);
 
-			sprintf(str, "%3.3f %3.3f %3.3f", (float)v_base_1.vx, (float)v_base_2.vx, (float)v_base_3.vx);
+			sprintf(str, "Vx= %3.3f", (float)v_base_1.vx);
 			ssd1306_SetCursor(0, 12);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			sprintf(str, "%3.3f %3.3f %3.3f", (float)v_base_1.vy, (float)v_base_2.vy, (float)v_base_3.vy);
+			sprintf(str, "Vy= %3.3f", (float)v_base_1.vy);
 			ssd1306_SetCursor(0, 22);
 			ssd1306_WriteString(str, Font_6x8, White);
 
-			sprintf(str, "%3.2f %3.2f %3.2f", (float)v_base_1.w, (float)v_base_2.w, (float)v_base_3.w);
+			sprintf(str, "W= %3.2f", (float)v_base_1.w);
 			ssd1306_SetCursor(0, 32);
 			ssd1306_WriteString(str, Font_6x8, White);
 
