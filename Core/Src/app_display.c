@@ -47,7 +47,7 @@ void start_rtos(void)
 	v_base.w = 10;**/
 
 	/* Cria a tarefa que irá imprimir os valores em tela */
-	xTaskCreate(displayTask, "displayTask", 128,   NULL,  2,  &hdisplayTask);
+	xTaskCreate(displayTask, "displayTask", 128,   NULL,  0,  &hdisplayTask);
 
 	/* Inicia o gerenciado de tarefas */
 	vTaskStartScheduler();
@@ -72,7 +72,7 @@ void displayTask(void *arg)
 
 					/* Velocidade Eixos */
 					/* Leitura dos dados da fila */
-					rDadosVEixo (v_eixo);
+					rDadosVEixo (v_eixo, 500, uxTaskPriorityGet(hdisplayTask));
 
 					/* Procedimento para imprimir os dados */
 					ssd1306_SetCursor(1, 2);
@@ -96,7 +96,7 @@ void displayTask(void *arg)
 
 					/* GPS */
 					/* Leitura dos dados da fila */
-					rDadosGps (gps);
+					rDadosGps (gps, 500, uxTaskPriorityGet(hdisplayTask));
 
 					ssd1306_SetCursor(1, 2);
 					ssd1306_WriteString("GPS", Font_6x8, White);
@@ -119,7 +119,7 @@ void displayTask(void *arg)
 
 					/* Velocidade escalar */
 					/* Leitura dos dados da fila */
-					rDadosVBase (v_base);
+					rDadosVBase (v_base, 500, uxTaskPriorityGet(hdisplayTask));
 
 					ssd1306_SetCursor(1, 2);
 					ssd1306_WriteString("Velocidade da Base", Font_6x8, White);

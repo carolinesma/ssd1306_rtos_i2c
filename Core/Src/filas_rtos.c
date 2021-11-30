@@ -35,60 +35,87 @@ void criar_filas(void) {
 	}
 }
 
-int rDadosVEixo (vEixo dados){
+int8_t rDadosVEixo (vEixo dados, TickType_t tempo, UBaseType_t uxPriority){
+	if (vEixoQueue != NULL) {
+		switch (uxPriority)
+		{
+		case 0:
+			if (xQueueReceive(vEixoQueue, &(dados), tempo) == pdPASS)
+				return 1;
+			else return 0;
+		break;
+		default:
+			if(xQueuePeek( vEixoQueue, &(dados), tempo ) == pdPASS)
+				return 1;
+			else return 0;
+		}
+	}
+	else
+		return -1;
+}
+
+int8_t rDadosVBase (vBase dados, TickType_t tempo, UBaseType_t uxPriority){
+	if (vBaseQueue != NULL) {
+		switch (uxPriority)
+		{
+		case 0:
+			if (xQueueReceive(vBaseQueue, &(dados), tempo) == pdPASS)
+				return 1;
+			else return 0;
+		break;
+		default:
+			if(xQueuePeek( vBaseQueue, &(dados), tempo ) == pdPASS)
+				return 1;
+			else return 0;
+		}
+	}
+	else
+		return -1;
+}
+
+int8_t rDadosGps (GPS dados, TickType_t tempo, UBaseType_t uxPriority){
+	if (gpsQueue != NULL) {
+		switch (uxPriority)
+		{
+		case 0:
+			if (xQueueReceive(gpsQueue, &(dados), tempo) == pdPASS)
+				return 1;
+			else return 0;
+		break;
+		default:
+			if(xQueuePeek( gpsQueue, &(dados), tempo ) == pdPASS)
+				return 1;
+			else return 0;
+		}
+	}
+	else
+		return -1;
+}
+
+int8_t wDadosVEixo (vEixo dados, TickType_t tempo){
 	if (vBaseQueue != NULL)
 	{
-		if (xQueueReceive(vBaseQueue, &(dados), (TickType_t) 500) == pdPASS)
+		if (xQueueSend(vBaseQueue, &(dados), tempo) == pdPASS)
 			return 1;
 		else return 0;
 	}
 	else return -1;
 }
 
-int rDadosVBase (vBase dados){
+int8_t wDadosVBase (vBase dados, TickType_t tempo){
 	if (vEixoQueue != NULL)
 	{
-		if (xQueueReceive(vEixoQueue, &(dados), (TickType_t) 500) == pdPASS)
+		if (xQueueSend(vEixoQueue, &(dados), tempo) == pdPASS)
 			return 1;
 		else return 0;
 	}
 	else return -1;
 }
 
-int rDadosGps (GPS dados){
+int8_t wDadosGps (GPS dados, TickType_t tempo){
 	if (gpsQueue != NULL)
 	{
-		if (xQueueReceive(gpsQueue, &(dados), (TickType_t) 500) == pdPASS)
-			return 1;
-		else return 0;
-	}
-	else return -1;
-}
-
-int wDadosVEixo (vEixo dados){
-	if (vBaseQueue != NULL)
-	{
-		if (xQueueSend(vBaseQueue, &(dados), (TickType_t) 500) == pdPASS)
-			return 1;
-		else return 0;
-	}
-	else return -1;
-}
-
-int wDadosVBase (vBase dados){
-	if (vEixoQueue != NULL)
-	{
-		if (xQueueSend(vEixoQueue, &(dados), (TickType_t) 500) == pdPASS)
-			return 1;
-		else return 0;
-	}
-	else return -1;
-}
-
-int wDadosGps (GPS dados){
-	if (gpsQueue != NULL)
-	{
-		if (xQueueSend(gpsQueue, &(dados), (TickType_t) 500) == pdPASS)
+		if (xQueueSend(gpsQueue, &(dados), tempo) == pdPASS)
 			return 1;
 		else return 0;
 	}

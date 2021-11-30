@@ -31,11 +31,11 @@ typedef  struct
 } vBase;
 
 void criar_filas(void);
-int rDadosVEixo (vEixo dados);
-int rDadosVBase (vBase dados);
-int rDadosGps (GPS dados);
-int wDadosVEixo (vEixo dados);
-int wDadosVBase (vBase dados);
-int wDadosGps (GPS dados);
+int8_t rDadosVEixo (vEixo dados, TickType_t tempo, UBaseType_t uxPriority);
+int8_t rDadosVBase (vBase dados, TickType_t tempo, UBaseType_t uxPriority);
+int8_t rDadosGps (GPS dados, TickType_t tempo, UBaseType_t uxPriority);
+int8_t wDadosVEixo (vEixo dados, TickType_t tempo);
+int8_t wDadosVBase (vBase dados, TickType_t tempo);
+int8_t wDadosGps (GPS dados, TickType_t tempo);
 
 #endif /* INC_FILAS_RTOS_H_ */
