@@ -27,6 +27,7 @@
 #include "ssd1306.h"
 #include "app_display.h"
 #include "filas_rtos.h"
+#include "teste_escrita.h"
 
 /* USER CODE END Includes */
 
@@ -107,6 +108,7 @@ int main(void)
   /* Inicializa a função rtos em app_display   */
   criar_filas();
   start_rtos();
+  start_wTask();
 
   /* USER CODE END 2 */
 

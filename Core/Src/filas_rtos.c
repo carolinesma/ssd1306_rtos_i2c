@@ -12,12 +12,21 @@
 #include "app_display.h"
 #include "filas_rtos.h"
 
-/* Incluir as bibliotecas do Display */
+/* Bibliotecas do Display */
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
 
+/*Filas para receber os dados:
+ * Velocidade do eixo: vEixoQueue
+ * GPS: gpsQueue
+ * Velocidade da Base: vBaseQueue
+ */
 xQueueHandle vEixoQueue, gpsQueue, vBaseQueue;
 
+/* Rotina para criar e verificar as filas
+ * Caso ocorra erro na criação retorna no display
+ * e fica preso no while(1)
+ */
 void criar_filas(void) {
 
 	/* Inicializa o display */
@@ -35,6 +44,14 @@ void criar_filas(void) {
 	}
 }
 
+/* Rotinas para ler informações nas filas, testa a prioridade para excluir
+ * apenas os dados lidos pelas tarefas de menor prioridade
+ *
+ * @param vEixo dados, TickType_t tempo, UBaseType_t uxPriority
+ * @return 1 se a leitura ocorreu com sucesso
+ * 		   0 se ocorreu erro na leitura
+ * 		   -1 se a fila não foi localizada
+ */
 int8_t rDadosVEixo (vEixo dados, TickType_t tempo, UBaseType_t uxPriority){
 	if (vEixoQueue != NULL) {
 		switch (uxPriority)
@@ -92,6 +109,13 @@ int8_t rDadosGps (GPS dados, TickType_t tempo, UBaseType_t uxPriority){
 		return -1;
 }
 
+/* Rotinas para escrever nas filas
+ *
+ * @param vEixo dados, TickType_t tempo
+ * @return 1 se a escrita ocorreu com sucesso
+ * 		   0 se ocorreu erro na escrita
+ * 		   -1 se a fila não foi localizada
+ */
 int8_t wDadosVEixo (vEixo dados, TickType_t tempo){
 	if (vBaseQueue != NULL)
 	{

@@ -72,7 +72,7 @@ void displayTask(void *arg)
 
 					/* Velocidade Eixos */
 					/* Leitura dos dados da fila */
-					rDadosVEixo (v_eixo, 500, uxTaskPriorityGet(hdisplayTask));
+					rDadosVEixo (v_eixo, (TickType_t)500, uxTaskPriorityGet(hdisplayTask));
 
 					/* Procedimento para imprimir os dados */
 					ssd1306_SetCursor(1, 2);
@@ -96,7 +96,7 @@ void displayTask(void *arg)
 
 					/* GPS */
 					/* Leitura dos dados da fila */
-					rDadosGps (gps, 500, uxTaskPriorityGet(hdisplayTask));
+					rDadosGps (gps, (TickType_t)500, uxTaskPriorityGet(hdisplayTask));
 
 					ssd1306_SetCursor(1, 2);
 					ssd1306_WriteString("GPS", Font_6x8, White);
@@ -109,7 +109,7 @@ void displayTask(void *arg)
 					ssd1306_SetCursor(1, 24);
 					ssd1306_WriteString(str, Font_6x8, White);
 
-					sprintf(str, "t= %3.2fº", (float)gps.angulo_teta);
+					sprintf(str, "t= %3.2f graus", (float)gps.angulo_teta);
 					ssd1306_SetCursor(1, 34);
 					ssd1306_WriteString(str, Font_6x8, White);
 
@@ -119,7 +119,7 @@ void displayTask(void *arg)
 
 					/* Velocidade escalar */
 					/* Leitura dos dados da fila */
-					rDadosVBase (v_base, 500, uxTaskPriorityGet(hdisplayTask));
+					rDadosVBase (v_base, (TickType_t)500, uxTaskPriorityGet(hdisplayTask));
 
 					ssd1306_SetCursor(1, 2);
 					ssd1306_WriteString("Velocidade da Base", Font_6x8, White);
