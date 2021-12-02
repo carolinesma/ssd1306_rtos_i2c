@@ -10,8 +10,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "queue.h"
-#include "app_display.h"
-#include "filas_rtos.h"
+#include "filas.h"
 #include "teste_escrita.h"
 
 vEixo v_eixo;
@@ -20,7 +19,7 @@ vBase v_base;
 
 TaskHandle_t hwTask;
 
-void start_wTask(void) {
+void teste_escrita(void) {
 
 	xTaskCreate(wTask, "wTask", 128,   NULL,  3,  &hwTask);
 
@@ -43,9 +42,9 @@ void wTask(void *arg){
 		v_base.vy = rand();
 		v_base.w = rand();
 
-		wDadosGps (gps, (TickType_t)10);
-		wDadosVEixo (v_eixo, (TickType_t)10);
-		wDadosVBase (v_base, (TickType_t)10);
+		writeDadosGps (gps, (TickType_t)10);
+		writeDadosVEixo (v_eixo, (TickType_t)10);
+		writeDadosVBase (v_base, (TickType_t)10);
 	}
 
 }

@@ -26,7 +26,8 @@
 #include <stdint.h>
 #include "ssd1306.h"
 #include "app_display.h"
-#include "filas_rtos.h"
+#include "filas.h"
+#include "semaforos.h"
 #include "teste_escrita.h"
 
 /* USER CODE END Includes */
@@ -105,10 +106,13 @@ int main(void)
   MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
 
-  /* Inicializa a função rtos em app_display   */
+  /* Inicializa aplicações   */
+
+  ssd1306_Init();
+  criar_semaforos();
   criar_filas();
   start_rtos();
-  start_wTask();
+  teste_escrita();
 
   /* USER CODE END 2 */
 

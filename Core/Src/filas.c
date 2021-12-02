@@ -9,10 +9,13 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "queue.h"
+#include "filas.h"
 #include "app_display.h"
-#include "filas_rtos.h"
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
+
+#define MIN_PRIORITY  0
+
 
 /*Filas para receber os dados:
  * Velocidade do eixo: vEixoQueue
@@ -24,16 +27,13 @@ xQueueHandle vEixoQueue, gpsQueue, vBaseQueue;
 /* Rotina para criar e testa a filas */
 void criar_filas(void) {
 
-	/* Inicializa o display */
-	ssd1306_Init();
-
 	vBaseQueue = xQueueCreate(5, sizeof(struct vBase *));
 	gpsQueue = xQueueCreate(5, sizeof(struct GPS *));
 	vEixoQueue = xQueueCreate(5, sizeof(struct vEixo *));
 	if ((vBaseQueue == NULL) || (gpsQueue == NULL) || (vEixoQueue == NULL))
 	{
 		ssd1306_SetCursor(1, 2);
-		ssd1306_WriteString("Erro: QueueCreate", Font_6x8, White);
+		ssd1306_WriteString("Erro: QueueCreate", FONTE, White);
 		ssd1306_UpdateScreen();
 		while(1);
 	}
@@ -47,11 +47,11 @@ void criar_filas(void) {
  * 		   0 se ocorreu erro na leitura
  * 		   -1 se a fila não foi localizada
  */
-int8_t rDadosVEixo (vEixo dados, TickType_t tempo, UBaseType_t uxPriority){
+int8_t readDadosVEixo (vEixo dados, TickType_t tempo, UBaseType_t uxPriority){
 	if (vEixoQueue != NULL) {
 		switch (uxPriority)
 		{
-		case 0:
+		case MIN_PRIORITY:
 			if (xQueueReceive(vEixoQueue, &(dados), tempo) == pdPASS)
 				return 1;
 			else return 0;
@@ -66,11 +66,11 @@ int8_t rDadosVEixo (vEixo dados, TickType_t tempo, UBaseType_t uxPriority){
 		return -1;
 }
 
-int8_t rDadosVBase (vBase dados, TickType_t tempo, UBaseType_t uxPriority){
+int8_t readDadosVBase (vBase dados, TickType_t tempo, UBaseType_t uxPriority){
 	if (vBaseQueue != NULL) {
 		switch (uxPriority)
 		{
-		case 0:
+		case MIN_PRIORITY:
 			if (xQueueReceive(vBaseQueue, &(dados), tempo) == pdPASS)
 				return 1;
 			else return 0;
@@ -85,11 +85,11 @@ int8_t rDadosVBase (vBase dados, TickType_t tempo, UBaseType_t uxPriority){
 		return -1;
 }
 
-int8_t rDadosGps (GPS dados, TickType_t tempo, UBaseType_t uxPriority){
+int8_t readDadosGps (GPS dados, TickType_t tempo, UBaseType_t uxPriority){
 	if (gpsQueue != NULL) {
 		switch (uxPriority)
 		{
-		case 0:
+		case MIN_PRIORITY:
 			if (xQueueReceive(gpsQueue, &(dados), tempo) == pdPASS)
 				return 1;
 			else return 0;
@@ -111,7 +111,7 @@ int8_t rDadosGps (GPS dados, TickType_t tempo, UBaseType_t uxPriority){
  * 		   0 se ocorreu erro na escrita
  * 		   -1 se a fila não foi localizada
  */
-int8_t wDadosVEixo (vEixo dados, TickType_t tempo){
+int8_t writeDadosVEixo (vEixo dados, TickType_t tempo){
 	if (vBaseQueue != NULL)
 	{
 		if (xQueueSend(vBaseQueue, &(dados), tempo) == pdPASS)
@@ -121,7 +121,7 @@ int8_t wDadosVEixo (vEixo dados, TickType_t tempo){
 	else return -1;
 }
 
-int8_t wDadosVBase (vBase dados, TickType_t tempo){
+int8_t writeDadosVBase (vBase dados, TickType_t tempo){
 	if (vEixoQueue != NULL)
 	{
 		if (xQueueSend(vEixoQueue, &(dados), tempo) == pdPASS)
@@ -131,7 +131,7 @@ int8_t wDadosVBase (vBase dados, TickType_t tempo){
 	else return -1;
 }
 
-int8_t wDadosGps (GPS dados, TickType_t tempo){
+int8_t writeDadosGps (GPS dados, TickType_t tempo){
 	if (gpsQueue != NULL)
 	{
 		if (xQueueSend(gpsQueue, &(dados), tempo) == pdPASS)

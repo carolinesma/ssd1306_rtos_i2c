@@ -8,7 +8,7 @@
 #ifndef INC_TESTE_ESCRITA_H_
 #define INC_TESTE_ESCRITA_H_
 
-void start_wTask(void);
+void teste_escrita(void);
 void wTask(void *arg);
 
 #endif /* INC_TESTE_ESCRITA_H_ */
