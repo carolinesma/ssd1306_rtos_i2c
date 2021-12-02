@@ -11,8 +11,6 @@
 #include "queue.h"
 #include "app_display.h"
 #include "filas_rtos.h"
-
-/* Bibliotecas do Display */
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
 
@@ -23,10 +21,7 @@
  */
 xQueueHandle vEixoQueue, gpsQueue, vBaseQueue;
 
-/* Rotina para criar e verificar as filas
- * Caso ocorra erro na criação retorna no display
- * e fica preso no while(1)
- */
+/* Rotina para criar e testa a filas */
 void criar_filas(void) {
 
 	/* Inicializa o display */

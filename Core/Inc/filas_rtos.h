@@ -7,8 +7,7 @@
 #ifndef INC_FILAS_RTOS_H_
 #define INC_FILAS_RTOS_H_
 
-/* Declaração das estrutura para coleta de dados
- */
+/* Declaração das estrutura para coleta de dados */
 typedef  struct
 {
 	uint32_t w1;
