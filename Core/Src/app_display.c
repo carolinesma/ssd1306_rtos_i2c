@@ -68,8 +68,11 @@ void displayTask(void *arg)
 			break;
 			case DISPLAY_ERR:
 				if(ssd1306_IICTest() == HAL_OK){
-					ssd1306_Init();
-					status = DISPLAY_OK;
+					if (xSemaphoreTake( i2c_Semphr, ( TickType_t ) 10 ) == pdTRUE){
+						ssd1306_Init();
+						xSemaphoreGive(i2c_Semphr);
+						status = DISPLAY_OK;
+					}
 				} else vTaskDelay(500);
 			break;
 		}
